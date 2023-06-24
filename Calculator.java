@@ -198,7 +198,7 @@ public class Calculator extends JFrame implements ActionListener {
         divisionButton = new JButton();
         divisionButton.setBounds(340, 450, 100, 100);
         divisionButton.addActionListener(this);
-        divisionButton.setText("C");
+        divisionButton.setText("/");
         divisionButton.setFont(new Font("Monospaced", Font.BOLD, 50));
         divisionButton.setFocusable(false);
         divisionButton.setBackground(Color.WHITE);
