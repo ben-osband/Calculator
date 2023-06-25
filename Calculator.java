@@ -7,9 +7,12 @@ Calculator.java
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
+import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -35,18 +38,22 @@ public class Calculator extends JFrame implements ActionListener {
     private JButton additionButton;
     private JButton subtractionButton;
     private JButton multiplicationButton;
-    private JButton clearButton;
-    private JButton equalsButton;
+    private JButton leftParenthesesButton;
+    private JButton rightParenthesesButton;
     private JButton divisionButton;
+    private JButton clearButton;
+    private JButton backspaceButton;
+    private JButton blank;
+    private JButton equalsButton;
 
-
+    ArrayList<String> expression = new ArrayList<String>();
 
     public Calculator() {
         
         // Setting up the frame
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setLayout(null);
-        this.setSize(465, 600);
+        this.setSize(465, 710);
         this.setLocationRelativeTo(null);
         this.getContentPane().setBackground(Color.DARK_GRAY);
         this.setResizable(false);
@@ -149,7 +156,7 @@ public class Calculator extends JFrame implements ActionListener {
         button8 = new JButton();
         button8.setBounds(120, 340, 100, 100);
         button8.addActionListener(this);
-        button8.setText("1");
+        button8.setText("8");
         button8.setFont(new Font("Monospaced", Font.BOLD, 50));
         button8.setFocusable(false);
         button8.setBackground(Color.GRAY);
@@ -171,13 +178,13 @@ public class Calculator extends JFrame implements ActionListener {
         multiplicationButton.setBackground(Color.WHITE);
 
         //// Fourth Row
-        clearButton = new JButton();
-        clearButton.setBounds(10, 450, 100, 100);
-        clearButton.addActionListener(this);
-        clearButton.setText("C");
-        clearButton.setFont(new Font("Monospaced", Font.BOLD, 50));
-        clearButton.setFocusable(false);
-        clearButton.setBackground(Color.WHITE);
+        leftParenthesesButton = new JButton();
+        leftParenthesesButton.setBounds(10, 450, 100, 100);
+        leftParenthesesButton.addActionListener(this);
+        leftParenthesesButton.setText("(");
+        leftParenthesesButton.setFont(new Font("Monospaced", Font.BOLD, 50));
+        leftParenthesesButton.setFocusable(false);
+        leftParenthesesButton.setBackground(Color.WHITE);
         
         button0 = new JButton();
         button0.setBounds(120, 450, 100, 100);
@@ -187,13 +194,13 @@ public class Calculator extends JFrame implements ActionListener {
         button0.setFocusable(false);
         button0.setBackground(Color.GRAY);
 
-        equalsButton = new JButton();
-        equalsButton.setBounds(230, 450, 100, 100);
-        equalsButton.addActionListener(this);
-        equalsButton.setText("=");
-        equalsButton.setFont(new Font("Monospaced", Font.BOLD, 50));
-        equalsButton.setFocusable(false);
-        equalsButton.setBackground(Color.WHITE);
+        rightParenthesesButton = new JButton();
+        rightParenthesesButton.setBounds(230, 450, 100, 100);
+        rightParenthesesButton.addActionListener(this);
+        rightParenthesesButton.setText(")");
+        rightParenthesesButton.setFont(new Font("Monospaced", Font.BOLD, 50));
+        rightParenthesesButton.setFocusable(false);
+        rightParenthesesButton.setBackground(Color.WHITE);
 
         divisionButton = new JButton();
         divisionButton.setBounds(340, 450, 100, 100);
@@ -202,6 +209,44 @@ public class Calculator extends JFrame implements ActionListener {
         divisionButton.setFont(new Font("Monospaced", Font.BOLD, 50));
         divisionButton.setFocusable(false);
         divisionButton.setBackground(Color.WHITE);
+
+        //// Fifth Row
+        clearButton = new JButton();
+        clearButton.setBounds(10, 560, 100, 100);
+        clearButton.addActionListener(this);
+        clearButton.setText("C");
+        clearButton.setFont(new Font("Monospaced", Font.BOLD, 50));
+        clearButton.setFocusable(false);
+        clearButton.setBackground(Color.WHITE);
+        
+        ImageIcon backspace = new ImageIcon("backspace_icon.png");
+        Image image = backspace.getImage();
+        Image newImage = image.getScaledInstance(50, 40, java.awt.Image.SCALE_SMOOTH);
+        backspace = new ImageIcon(newImage);
+
+        backspaceButton = new JButton();
+        backspaceButton.setBounds(120, 560, 100, 100);
+        backspaceButton.addActionListener(this);
+        backspaceButton.setIcon(backspace);
+        backspaceButton.setText("back");
+        backspaceButton.setFont(new Font("Monospaced", Font.BOLD, 0));
+        backspaceButton.setFocusable(false);
+        backspaceButton.setBackground(Color.WHITE);
+
+        blank = new JButton();
+        blank.setBounds(230, 560, 100, 100);
+        //blank.addActionListener(this);
+        blank.setFont(new Font("Monospaced", Font.BOLD, 50));
+        blank.setFocusable(false);
+        blank.setBackground(Color.WHITE);
+
+        equalsButton = new JButton();
+        equalsButton.setBounds(340, 560, 100, 100);
+        equalsButton.addActionListener(this);
+        equalsButton.setText("=");
+        equalsButton.setFont(new Font("Monospaced", Font.BOLD, 50));
+        equalsButton.setFocusable(false);
+        equalsButton.setBackground(Color.WHITE);
 
         /////////////////////////////////////// Adding objects to the frame ///////////////////////////////////////////
 
@@ -218,10 +263,14 @@ public class Calculator extends JFrame implements ActionListener {
         this.add(button8);
         this.add(button9);
         this.add(multiplicationButton);
-        this.add(clearButton);
+        this.add(leftParenthesesButton);
         this.add(button0);
-        this.add(equalsButton);
+        this.add(rightParenthesesButton);
         this.add(divisionButton);
+        this.add(clearButton);
+        this.add(backspaceButton);
+        this.add(blank);
+        this.add(equalsButton);
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -230,10 +279,15 @@ public class Calculator extends JFrame implements ActionListener {
 
     }
 
-    @Override
     // Event handler
+    @Override
     public void actionPerformed(ActionEvent e) {
-        System.out.println("Action");
+       System.out.println(((AbstractButton) e.getSource()).getText());
+    }
+
+    // Method to evaluate the expression entered by the user
+    public double doMath(String expression) {
+        return 0;
     }
 
     public static void main(String[] args) {
