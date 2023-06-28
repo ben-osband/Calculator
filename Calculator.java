@@ -20,11 +20,11 @@ import javax.swing.JPanel;
 import javax.swing.JLabel;
 
 
-public class Calculator extends JFrame implements ActionListener {
+public class Calculator extends JFrame implements ActionListener/*, ExEval*/ {
 
     private JLabel label;
     private JPanel answerField;
-
+    
     private JButton button0;
     private JButton button1;
     private JButton button2;
@@ -43,10 +43,11 @@ public class Calculator extends JFrame implements ActionListener {
     private JButton divisionButton;
     private JButton clearButton;
     private JButton backspaceButton;
-    private JButton blank;
+    private JButton notationButton;
     private JButton equalsButton;
 
-    ArrayList<String> expression = new ArrayList<String>();
+    ArrayList<String> expressionArray = new ArrayList<String>();
+    String expression = "";
 
     public Calculator() {
         
@@ -233,12 +234,13 @@ public class Calculator extends JFrame implements ActionListener {
         backspaceButton.setFocusable(false);
         backspaceButton.setBackground(Color.WHITE);
 
-        blank = new JButton();
-        blank.setBounds(230, 560, 100, 100);
-        //blank.addActionListener(this);
-        blank.setFont(new Font("Monospaced", Font.BOLD, 50));
-        blank.setFocusable(false);
-        blank.setBackground(Color.WHITE);
+        notationButton = new JButton();
+        notationButton.setBounds(230, 560, 100, 100);
+        notationButton.addActionListener(this);
+        notationButton.setText("in");
+        notationButton.setFont(new Font("Monospaced", Font.BOLD, 25));
+        notationButton.setFocusable(false);
+        notationButton.setBackground(Color.WHITE);
 
         equalsButton = new JButton();
         equalsButton.setBounds(340, 560, 100, 100);
@@ -269,7 +271,7 @@ public class Calculator extends JFrame implements ActionListener {
         this.add(divisionButton);
         this.add(clearButton);
         this.add(backspaceButton);
-        this.add(blank);
+        this.add(notationButton);
         this.add(equalsButton);
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -282,7 +284,38 @@ public class Calculator extends JFrame implements ActionListener {
     // Event handler
     @Override
     public void actionPerformed(ActionEvent e) {
-       System.out.println(((AbstractButton) e.getSource()).getText());
+       
+        String buttonText = ((AbstractButton) e.getSource()).getText();
+
+        // conditionals for notation toggle
+        if(buttonText.equals("in")) {
+            notationButton.setText("post");
+        } else if(buttonText.equals("post")) {
+            notationButton.setText("pre");
+        } else if(buttonText.equals("pre")) {
+            notationButton.setText("in");
+        
+            // condition for when the equals button is clicked
+        // uses the ExEval interface to evaluate the entered expression
+        } else if(buttonText.equals("=")) {
+            //do math
+        // condition for when the clear button is pressed
+        // resets the expression variable to an empty string
+        } else if(buttonText.equals("C")) {
+            expression = "";
+        // condition for when operator or number buttons are clicked
+        // adds the operator or number to the expression
+        } else if(buttonText.charAt(0) != 'b') {
+            expression += buttonText;
+        // condition for when the backspace key is pressed and the expression is not already empty
+        // removes the last character of the expression string
+        } else if(expression.length() > 0) {
+            expression = expression.substring(0, expression.length() - 1);
+        }
+
+        //updates the answerField label
+        label.setText(expression);
+
     }
 
     // Method to evaluate the expression entered by the user
