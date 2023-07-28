@@ -1,7 +1,7 @@
 /*
-Ben Osband
-6/24/2023
-Calculator.java
+ * Ben Osband
+ * 7/28/2023
+ * Calculator.java
 */
 
 import java.awt.BorderLayout;
@@ -10,7 +10,6 @@ import java.awt.Font;
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.ArrayList;
 
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
@@ -46,8 +45,8 @@ public class Calculator extends JFrame implements ActionListener/*, ExEval*/ {
     private JButton notationButton;
     private JButton equalsButton;
 
-    ArrayList<String> expressionArray = new ArrayList<String>();
     String expression = "";
+    ExEval evaluator = new ExEval();
 
     public Calculator() {
         
@@ -296,9 +295,14 @@ public class Calculator extends JFrame implements ActionListener/*, ExEval*/ {
             notationButton.setText("in");
         
             // condition for when the equals button is clicked
-        // uses the ExEval interface to evaluate the entered expression
+        // uses the ExEval class to evaluate the entered expression
         } else if(buttonText.equals("=")) {
-            //do math
+            //tries to evaluate the expression and catches arithmetic exceptions
+            try {
+                expression = Double.toString(evaluator.evaluate(expression, notationButton.getText()));
+            } catch(ArithmeticException ex) {
+                expression = ((Throwable) ex).getLocalizedMessage();
+            }
         // condition for when the clear button is pressed
         // resets the expression variable to an empty string
         } else if(buttonText.equals("C")) {
@@ -318,10 +322,7 @@ public class Calculator extends JFrame implements ActionListener/*, ExEval*/ {
 
     }
 
-    // Method to evaluate the expression entered by the user
-    public double doMath(String expression) {
-        return 0;
-    }
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     public static void main(String[] args) {
         new Calculator();
